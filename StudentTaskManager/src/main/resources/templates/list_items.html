@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Student Task Manager</title>
+
+<link rel="stylesheet"
+ href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+ integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+ crossorigin="anonymous">
+ 
+
+<style>
+@import
+	url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+* {
+	list-style: none;
+	text-decoration: none;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Open Sans', sans-serif;
+}
+
+body {
+	background: navy;
+}
+
+.wrapper .sidebar {
+	background: darkgrey;
+	/*position: fixed;*/
+	top: 0;
+	left: 0;
+	float: left;
+	width: 20%;
+	height: 150vh;
+	padding: 20px 0;
+	transition: all 0.5s ease;
+}
+
+.wrapper .sidebar ul li a .button {
+	color: white;
+	background: purple;
+	font-size: 14px;
+	width: 20%;
+	display: inline-block;
+}
+.wrapperRight {
+	background: beige;
+	float: right;
+	width: 80%;
+	height: 150vh;
+	padding: 20px 0;
+	transition: all 0.5s ease;
+}
+
+.wrapper .sidebar ul li a {
+	display: block;
+	padding: 13px 30px;
+	border-bottom: 1px solid #10558d;
+	color: rgb(241, 237, 237);
+	font-size: 16px;
+	position: relative;
+}
+
+.wrapper .sidebar ul li a .icon {
+	color: #dee4ec;
+	width: 30px;
+	display: inline-block;
+}
+
+.wrapper .sidebar ul li a:hover, .wrapper .sidebar ul li a.active {
+	color: #0c7db1;
+	background: white;
+	border-right: 2px solid rgb(5, 68, 104);
+}
+
+.wrapper .sidebar ul li a:hover .icon, .wrapper .sidebar ul li a.active .icon
+	{
+	color: #0c7db1;
+}
+
+.wrapper .sidebar ul li a:hover:before, .wrapper .sidebar ul li a.active:before
+	{
+	display: block;
+}
+
+.container my-2 {
+	float: right;
+	width: 675px;
+}
+</style>
+
+</head>
+<body>
+	<div class="wrapper">
+		<!--Top menu -->
+		<div class="sidebar">
+			<!--profile image & text-->
+			<!--menu item-->
+			<ul>
+
+				<li><a th:href="@{/}" class="btn btn-dark"> Home </a></li>
+				<li><a th:href="@{/tasks}" class="btn btn-dark"> Task List
+				</a></li>
+				<li><a th:href="@{/items}" class="btn btn-light"> Item List
+				</a></li>
+				<li><a th:href="@{/showNewTaskForm}" class="btn btn-dark">Add Task 
+				</a><li>
+				<li><a th:href="@{/showNewItemForm}" class="btn btn-dark"> Add Item
+				</a></li>
+
+			</ul>
+		</div>
+	</div>
+	<div class=wrapperRight>
+ 		<div class="container my-2">
+  
+  <h1>Item List</h1> 
+  <table border="1" class = "table table-striped table-responsive-md">
+   <thead>
+    <tr>
+     <th><a th:href="@{'/itemsPage/' + ${currentPage} + '?sortField=itemName&sortDir=' + ${reverseSortDir}}"> Item Name</a></th>
+     <th> Actions </th>
+    </tr>
+   </thead>
+   <tbody>
+    <tr th:each="item : ${listItems}">
+     <td th:text="${item.itemName}"></td>
+       <td> <a th:href="@{/showItemFormForUpdate/{item_id}(item_id=${item.item_id})}" class="btn btn-primary">Update</a>
+         <a th:href="@{/deleteItem/{item_id}(item_id=${item.item_id})}" class="btn btn-danger">Delete</a> 
+     </td>
+    </tr>
+   </tbody>
+  </table>
+  <div th:if = "${totalPages > 1}">
+   <div class = "row col-sm-10">
+    <div class = "col-sm-2">
+     Total Rows: [[${totalItems}]] 
+    </div>
+    <div class = "col-sm-1">
+     <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+      <a th:if="${currentPage != i}" th:href="@{'/itemsPage/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+      <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+     </span>
+    </div>
+    <div class = "col-sm-1">
+     <a th:if="${currentPage < totalPages}" th:href="@{'/itemsPage/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
+     <span th:unless="${currentPage < totalPages}">Next</span>
+    </div>
+    
+     <div class="col-sm-1">
+        <a th:if="${currentPage < totalPages}" th:href="@{'/itemsPage/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
+     <span th:unless="${currentPage < totalPages}">Last</span>
+        </div>
+   </div>
+  </div>
+ </div>
+ </div>
+ 
+</body>
+</html>
