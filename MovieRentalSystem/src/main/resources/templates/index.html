@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Movie Rental System</title>
+
+<link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="Styles.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+* {
+    list-style: none;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    background: #141414;
+    color: #ffffff;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.wrapper .sidebar {
+    background: #000;
+    top: 0;
+    left: 0;
+    float: left;
+    width: 20%;
+    height: 150vh;
+    padding: 20px 0;
+    transition: all 0.5s ease;
+}
+
+.wrapper.collapsed .sidebar {
+    width: 0;
+    overflow: hidden;
+}
+
+.wrapper.collapsed .sidebar ul {
+    display: none;
+}
+
+.wrapper .sidebar ul li a .button {
+    color: #e50914;
+    background: #222;
+}
+
+.wrapper .sidebar ul li a .icon {
+    color: #e50914;
+    width: 30px;
+    display: inline-block;
+}
+
+.wrapper .sidebar ul li a:hover, .wrapper .sidebar ul li a.active {
+    color: #e50914;
+    background: #222;
+}
+
+.wrapper .sidebar ul li a {
+    display: block;
+    padding: 13px 30px;
+    border-bottom: 1px solid #333;
+    color: #fff;
+    font-size: 16px;
+    background-color: transparent;
+    transition: background 0.3s, color 0.3s;
+    position: relative;
+}
+
+.wrapperRight {
+    background: #181818;
+    float: right;
+    width: 80%;
+    height: 150vh;
+    padding: 20px;
+    color: #ffffff;
+    transition: all 0.5s ease;
+}
+
+.danflix-header {
+    background-color: #141414;
+    color: #e50914;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    padding: 10px 30px;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+.danflix-header h1 {
+    margin: 0;
+}
+
+.container my-2 {
+    float: right;
+    width: 675px;
+    color: #e50914;
+    border-bottom: 2px solid #e50914;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.table {
+    background-color: #222;
+    color: #fff;
+}
+
+.table thead th {
+    background-color: #e50914;
+    color: #fff;
+    border: none;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #2c2c2c;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #1f1f1f;
+}
+
+.table td, .table th {
+    border: none;
+}
+
+.btn-dark {
+    background-color: #e50914;
+    border-color: #e50914;
+    color: #fff;
+}
+
+.btn-dark:hover {
+    background-color: #b20710;
+    border-color: #b20710;
+}
+</style>
+</head>
+<body>
+
+<div class="danflix-header">
+    <h1>DanFlix</h1>
+</div>
+
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a th:href="@{/}" class="btn btn-light"> Home </a></li>
+            <li><a th:href="@{/movies}" class="btn btn-dark"> Movie Library</a></li>
+            <li><a th:href="@{/watchlistMovies}" class="btn btn-dark"> Watchlist</a></li>
+            <li><a th:href="@{/showNewMovieForm}" class="btn btn-dark">Rent a Movie!</a></li>
+            <li><a th:href="@{/showNewWatchlistMovieForm}" class="btn btn-dark"> Add to Watchlist!</a></li>
+        </ul>
+    </div>
+    
+    <div class="wrapperRight">
+        <div class="container my-2">
+            <h1>Rented Movies</h1>
+            <table border="1" class="table table-striped table-responsive-md">
+                <thead>
+                    <tr>
+                        <th><a>Movie Name</a></th>
+                        <th><a>Movie Description</a></th>
+                        <th><a>Due Date</a></th>
+                        <th><a>Countdown Timer</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="movie : ${listMovies}">
+                        <td th:text="${movie.movieName}"></td>
+                        <td th:text="${movie.movieDescription}"></td>
+                        <td th:text="${movie.dueDate}"></td>
+                        <td th:text="${movie.countdown}"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h1>In your Watchlist</h1>
+            <table border="1" class="table table-striped table-responsive-md">
+                <thead>
+                    <tr>
+                        <th><a>Watchlist</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="watchlistMovie : ${listWatchlistMovies}">
+                        <td th:text="${watchlistMovie.watchlistMovieName}"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.querySelector('.wrapper').classList.toggle('collapsed');
+    }
+</script>
+
+<button onclick="toggleSidebar()" class="btn btn-dark" style="position: fixed; top: 20px; left: 20px;">+</button>
+
+</body>
+</html>
